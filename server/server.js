@@ -2,6 +2,8 @@ const express = require('express');
 
 const app = express()
 
-console.log("Testando!!")
+console.log("O servidor está rodando.")
 
-app.listen(3000)
+app.use('/', require('./route/postsRoute'))
+
+app.listen(3333)
