@@ -2,7 +2,10 @@ const express = require('express');
 
 const app = express()
 
-console.log("O servidor está rodando.")
+
+console.log("---------------")
+console.log("Server Running.")
+console.log("---------------")
 
 app.use('/', require('./route/postsRoute'))
 
