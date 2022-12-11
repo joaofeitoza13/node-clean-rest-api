@@ -1,13 +1,18 @@
 const express = require('express')
 const router = express.Router()
+const postsService = require('../service/postsService')
+
+
 
 router.get('/posts/', async function (req, res) {
-  res.json([{
-        id: 1,
-        title: 'REST API',
-        content: '...',
-        date: new Date()
-      }])
+  console.log("Routes Layer.")
+  console.log("-")
+  console.log("Requesting all posts.")
+  console.log("---------------------")
+
+  const posts = await postsService.getPosts()
+
+  res.json(posts)
 })
 
 router.get('/posts/:id', async function (req, res) {
