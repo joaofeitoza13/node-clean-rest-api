@@ -28,7 +28,13 @@ router.put('/posts/:id', async function (req, res) {
 })
 
 router.delete('/posts/:id', async function (req, res) {
+  console.log("Routes Layer.")
+  console.log("-")
+  console.log("Requesting deletion of all posts.")
+  console.log("---------------------------------")
 
+  await postsService.deletePosts()
+  console.log("All posts deleted.")
 })
 
 module.exports = router
