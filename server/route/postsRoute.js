@@ -12,7 +12,11 @@ router.get('/posts/', async function (req, res) {
 })
 
 router.get('/posts/:id', async function (req, res) {
+  const postId = req.params.id
 
+  const fetchedPost = await postsService.getPosts(postId)
+
+  res.json(fetchedPost)
 })
 
 router.post('/posts/', async function (req, res) {
@@ -24,7 +28,7 @@ router.put('/posts/:id', async function (req, res) {
   const post = req.body
 
   await postsService.updatePost(postId, post)
-  
+
   res.end()
 })
 
