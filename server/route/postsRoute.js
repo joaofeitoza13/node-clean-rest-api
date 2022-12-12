@@ -34,8 +34,11 @@ router.put('/posts/:id', async function (req, res) {
 
 router.delete('/posts/:id', async function (req, res) {
   const postId = req.params.id
+  const post = req.body
 
   await postsService.deletePost(postId)
+
+  res.json(post)
 })
 
 module.exports = router
