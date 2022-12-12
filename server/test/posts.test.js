@@ -6,24 +6,22 @@ const generate = function () {
   return crypto.randomBytes(20).toString('hex');
 }
 
+const request = function(url, method, data) {
+  return axios({url, method, data})
+}
+
 test('Should get posts', async function (){
-  //given
   const post1 = await postsService.savePost({ title: generate(), content: generate() })
   const post2 = await postsService.savePost({ title: generate(), content: generate() })
   const post3 = await postsService.savePost({ title: generate(), content: generate() })
-  const post4 = await postsService.savePost({ title: generate(), content: generate() })
-  const post5 = await postsService.savePost({ title: generate(), content: generate() })
-  const post6 = await postsService.savePost({ title: generate(), content: generate() })
-
-  //when
-  const response = await axios({
-    url: 'http://localhost:3333/posts',
-    method: 'get'
-  })
+  
+  const response = await request('http://localhost:3333/posts', 'get')
   const posts = response.data
-
-  //then
-  expect(posts).toHaveLength(6)
-
-  await postsService.deletePosts()
+  
+  expect(posts).toHaveLength(3)
+  
+  // await postsService.deletePosts()
+  await postsService.deletePost(post1.id)
+  await postsService.deletePost(post2.id)
+  await postsService.deletePost(post3.id)
 })
