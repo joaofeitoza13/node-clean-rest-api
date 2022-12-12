@@ -2,6 +2,10 @@ const postsData = require('../data/postsData')
 
 
 
+exports.getPost = function (id) {
+  return postsData.getPost(id)
+}
+
 exports.getPosts = function () {
   return postsData.getPosts()
 }
