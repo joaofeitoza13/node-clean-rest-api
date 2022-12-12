@@ -1,5 +1,12 @@
 const database = require('../infra/database');
 
+exports.getPost = function (id) {
+  return database.oneOrNone(
+    'SELECT * FROM blog.post WHERE ID = $1', 
+    [id]
+  )
+}
+
 exports.getPosts = function () {
   return database.query(
     'SELECT * FROM blog.post'
