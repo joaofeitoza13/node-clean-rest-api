@@ -10,6 +10,18 @@ const request = function(url, method, data) {
   return axios({url, method, data})
 }
 
+test.only('Should post a single post', async function (){
+  const post = await postsService.savePost({ title: generate(), content: generate() })
+  
+  const response = await request('http://localhost:3333/posts/', 'post', post)
+  const fetchedPost = response.data
+  
+  expect(fetchedPost.title).toBe(post.title)
+  expect(fetchedPost.content).toBe(post.content)
+  
+  await postsService.deletePost(post.id)
+})
+
 test('Should get a single post', async function (){
   const post = await postsService.savePost({ title: generate(), content: generate() })
   
