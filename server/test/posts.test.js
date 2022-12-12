@@ -41,3 +41,13 @@ test('Should update a post', async function (){
 
   await postsService.deletePost(post.id)
 })
+
+test('Should delete a post', async function (){
+  const post = await postsService.savePost({ title: generate(), content: generate() })
+  
+  await request(`http://localhost:3333/posts/${post.id}`, 'delete')
+  
+  const fetchedPost = await postsService.getPost(post.id)
+  
+  expect(fetchedPost).toBe(null)
+})
