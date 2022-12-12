@@ -24,8 +24,8 @@ router.put('/posts/:id', async function (req, res) {
 })
 
 router.delete('/posts/:id', async function (req, res) {
-  await postsService.deletePosts()
-  console.log("All posts deleted.")
+  const postId = req.params.id
+  await postsService.deletePost(postId)
 })
 
 module.exports = router
