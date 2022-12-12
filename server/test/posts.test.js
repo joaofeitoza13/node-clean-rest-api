@@ -10,8 +10,8 @@ const request = function(url, method, data) {
   return axios({url, method, data})
 }
 
-test.only('Should post a single post', async function (){
-  const post = await postsService.savePost({ title: generate(), content: generate() })
+test('Should post a single post', async function (){
+  const post = { title: generate(), content: generate() }
   
   const response = await request('http://localhost:3333/posts/', 'post', post)
   const fetchedPost = response.data
@@ -19,7 +19,9 @@ test.only('Should post a single post', async function (){
   expect(fetchedPost.title).toBe(post.title)
   expect(fetchedPost.content).toBe(post.content)
   
-  await postsService.deletePost(post.id)
+  await postsService.deletePost(fetchedPost.id)
+  const checkPost = await postsService.getPost(fetchedPost.id)
+  expect(checkPost).toBe(null)
 })
 
 test('Should get a single post', async function (){
@@ -33,6 +35,8 @@ test('Should get a single post', async function (){
   
   // await postsService.deletePosts()
   await postsService.deletePost(post.id)
+  const checkPost = await postsService.getPost(post.id)
+  expect(checkPost).toBe(null)
 })
 
 test('Should get posts', async function (){
@@ -49,6 +53,9 @@ test('Should get posts', async function (){
   await postsService.deletePost(post1.id)
   await postsService.deletePost(post2.id)
   await postsService.deletePost(post3.id)
+
+  const fetchedPosts = await postsService.getPosts()
+  expect(fetchedPosts).toHaveLength(0)
 })
 
 test('Should update a post', async function (){
