@@ -10,6 +10,19 @@ const request = function(url, method, data) {
   return axios({url, method, data})
 }
 
+test.only('Should get posts', async function (){
+  const post = await postsService.savePost({ title: generate(), content: generate() })
+  
+  const response = await request(`http://localhost:3333/posts/${post.id}`, 'get')
+  const fetchedPost = response.data
+  
+  expect(fetchedPost.title).toBe(post.title)
+  expect(fetchedPost.content).toBe(post.content)
+  
+  // await postsService.deletePosts()
+  await postsService.deletePost(post.id)
+})
+
 test('Should get posts', async function (){
   const post1 = await postsService.savePost({ title: generate(), content: generate() })
   const post2 = await postsService.savePost({ title: generate(), content: generate() })
