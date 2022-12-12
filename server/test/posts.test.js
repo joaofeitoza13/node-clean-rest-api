@@ -25,3 +25,19 @@ test('Should get posts', async function (){
   await postsService.deletePost(post2.id)
   await postsService.deletePost(post3.id)
 })
+
+test('Should update a post', async function (){
+  const post = await postsService.savePost({ title: generate(), content: generate() })
+
+  post.title = generate()
+  post.content = generate()
+
+  await request(`http://localhost:3333/posts/${post.id}`, 'put', post)
+  
+  const updatedPost = await postsService.getPost(post.id)
+
+  expect(updatedPost.title).toBe(post.title)
+  expect(updatedPost.content).toBe(post.content)
+
+  await postsService.deletePost(post.id)
+})
