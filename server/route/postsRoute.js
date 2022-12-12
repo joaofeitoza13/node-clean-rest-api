@@ -14,7 +14,7 @@ router.get('/posts/', async function (req, res) {
 router.get('/posts/:id', async function (req, res) {
   const postId = req.params.id
 
-  const fetchedPost = await postsService.getPosts(postId)
+  const fetchedPost = await postsService.getPost(postId)
 
   res.json(fetchedPost)
 })
