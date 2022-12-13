@@ -7,6 +7,13 @@ exports.getPost = function (id) {
   )
 }
 
+exports.getPostByTitle = function (title) {
+  return database.oneOrNone(
+    'SELECT * FROM blog.post WHERE title = $1', 
+    [title]
+  )
+}
+
 exports.getPosts = function () {
   return database.query(
     'SELECT * FROM blog.post'
