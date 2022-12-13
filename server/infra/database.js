@@ -8,7 +8,4 @@ const db = pgp({
   database: 'blog'
 })
 
-console.log("Connected to DB.")
-console.log("----------------")
-
 module.exports = db
