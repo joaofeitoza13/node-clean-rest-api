@@ -7,21 +7,36 @@ const generate = function () {
 }
 
 const request = function(url, method, data) {
-  return axios({url, method, data})
+  return axios({ url, method, data, validateStatus: false })
 }
 
-test('Should post a single post', async function (){
-  const post = { title: generate(), content: generate() }
-  
-  const response = await request('http://localhost:3333/posts/', 'post', post)
+beforeAll(async () => await postsService.deletePosts())
+
+test('Should post a single post', async function () {
+  const data = { title: generate(), content: generate() }
+
+  const response = await request('http://localhost:3333/posts/', 'post', data)
+  expect(response.status).toBe(201)
+
   const fetchedPost = response.data
-  
-  expect(fetchedPost.title).toBe(post.title)
-  expect(fetchedPost.content).toBe(post.content)
+  expect(fetchedPost.title).toBe(data.title)
+  expect(fetchedPost.content).toBe(data.content)
   
   await postsService.deletePost(fetchedPost.id)
-  const checkPost = await postsService.getPost(fetchedPost.id)
-  expect(checkPost).toBe(null)
+  // const checkPost = await postsService.getPost(fetchedPost.id)
+  // expect(checkPost).toBe(null)
+})
+
+test('Should NOT post a single post', async function (){
+  const data = { title: generate(), content: generate() }
+  
+  const response1 = await request('http://localhost:3333/posts/', 'post', data)
+  const response2 = await request('http://localhost:3333/posts/', 'post', data)
+
+  expect(response2.status).toBe(409)
+  const post = response1.data
+  
+  await postsService.deletePost(post.id)
 })
 
 test('Should get a single post', async function (){
@@ -35,8 +50,8 @@ test('Should get a single post', async function (){
   
   // await postsService.deletePosts()
   await postsService.deletePost(post.id)
-  const checkPost = await postsService.getPost(post.id)
-  expect(checkPost).toBe(null)
+  // const checkPost = await postsService.getPost(post.id)
+  // expect(checkPost).toBe(null)
 })
 
 test('Should get posts', async function (){
@@ -45,8 +60,9 @@ test('Should get posts', async function (){
   const post3 = await postsService.savePost({ title: generate(), content: generate() })
   
   const response = await request('http://localhost:3333/posts', 'get')
+  expect(response.status).toBe(200);
+
   const posts = response.data
-  
   expect(posts).toHaveLength(3)
   
   // await postsService.deletePosts()
@@ -64,22 +80,30 @@ test('Should update a post', async function (){
   post.title = generate()
   post.content = generate()
 
-  await request(`http://localhost:3333/posts/${post.id}`, 'put', post)
+  const response = await request(`http://localhost:3333/posts/${post.id}`, 'put', post)
   
-  const updatedPost = await postsService.getPost(post.id)
+  expect(response.status).toBe(204)
 
+  const updatedPost = await postsService.getPost(post.id)
   expect(updatedPost.title).toBe(post.title)
   expect(updatedPost.content).toBe(post.content)
 
   await postsService.deletePost(post.id)
 })
 
+test('Should NOT update a post', async function (){
+  const post = { id: 0 }
+
+  const response = await request(`http://localhost:3333/posts/${post.id}`, 'put', post)
+  expect(response.status).toBe(404)
+})
+
 test('Should delete a post', async function (){
   const post = await postsService.savePost({ title: generate(), content: generate() })
   
-  await request(`http://localhost:3333/posts/${post.id}`, 'delete')
-  
-  const fetchedPost = await postsService.getPost(post.id)
-  
-  expect(fetchedPost).toBe(null)
+  const response = await request(`http://localhost:3333/posts/${post.id}`, 'delete')
+  expect(response.status).toBe(204)
+
+  // const fetchedPost = await postsService.getPost(post.id)
+  // expect(fetchedPost).toBe(null)
 })
